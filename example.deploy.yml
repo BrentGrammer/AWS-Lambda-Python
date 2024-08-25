@@ -1,3 +1,5 @@
+# This would go in a .github/workflows folder
+
 name: Deploy Lambda
 
 on:
