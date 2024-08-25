@@ -70,7 +70,6 @@ if aws iam get-role --role-name "$ROLE_NAME" >/dev/null 2>&1; then
     # Update the assume role policy document
     aws iam update-assume-role-policy \
         --role-name "$ROLE_NAME" \
-        --timeout 23 \
         --policy-document file://trust-policy.json
 
     coloredEcho $YELLOW "Updated assume role policy for $ROLE_NAME\n"
@@ -100,8 +99,16 @@ if aws lambda get-function --function-name "$LAMBDA_FUNCTION_NAME" --output text
 
     aws lambda update-function-code \
       --function-name "$LAMBDA_FUNCTION_NAME" \
-      --timeout "$TIMEOUT" \
       --image-uri "$ECR_URI":latest
+
+    coloredEcho $YELLOW "Waiting for function update to complete..."
+
+    # Wait for the function to be in an updateable state - there is a cooldown period between updates to lambda you need to wait for
+    aws lambda wait function-updated --function-name "$LAMBDA_FUNCTION_NAME"
+        
+    aws lambda update-function-configuration \
+      --function-name "$LAMBDA_FUNCTION_NAME" \
+      --timeout "$TIMEOUT"
 
 
     coloredEcho $YELLOW "\n SUCCESS: Lambda function updated"
