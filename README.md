@@ -1,6 +1,6 @@
 # AWS Lambda with Python Deployment package
 
-Example project to deploy a Python deployment package (zip file) to AWS Lambda.
+Example project to deploy a Python deployment package (zip file) to AWS Lambda with dependencies included.
 
 - [AWS Docs - zipping a python package](https://docs.aws.amazon.com/lambda/latest/dg/python-package.html)
 - [Example worflow using version control](https://stackoverflow.com/questions/78157777/how-to-package-and-deploy-aws-python-lambda-functions-automatically)
