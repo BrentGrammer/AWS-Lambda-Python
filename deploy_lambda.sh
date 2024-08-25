@@ -22,6 +22,8 @@ IMAGE_NAME="test-lambda-function"
 IMAGE_TAG="test"
 ECR_REPO_NAME="test-lambda-ecr"
 LAMBDA_FUNCTION_NAME="test-lambda-function"
+ROLE_NAME="lambda-execution"
+TIMEOUT=30
 
 
 # authenticate docker cli in your machine to AWS ECR
@@ -54,8 +56,6 @@ coloredEcho $YELLOW "Success: pushed image to ECR: $ECR_URI:latest\n"
 
 # Create a execution role for the lambda (uses file that should hold the trust policy and is adjacent to this script)
 coloredEcho $YELLOW "Creating execution role and attaching basic execution permissions to the role...\n"
-
-ROLE_NAME="lambda-execution"
 
 if aws iam get-role --role-name "$ROLE_NAME" >/dev/null 2>&1; then
     coloredEcho $YELLOW "Role $ROLE_NAME already exists. Updating role...\n"
@@ -110,7 +110,7 @@ else
     --package-type Image \
     --code ImageUri="$ECR_URI":latest \
     --role "$ROLE_ARN" \
-    --timeout 30
+    --timeout "$TIMEOUT"
 
     coloredEcho $YELLOW "SUCCESS: Lambda created\n"
 fi
