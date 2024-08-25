@@ -47,6 +47,7 @@ Example project to deploy a Python AWS Lambda handler containerized with Docker 
 
 - `chmod +x deploy_lambda.sh`
 - run `./deploy_lambda.sh`
+  - This will: 1) Create an AWS ECR in your account, 2) build and push the docker image to the ECR, 3) Create permissions/role needed for the Lambda execution, 4) Create or update the Lambda
 
 ## Github Actions
 
