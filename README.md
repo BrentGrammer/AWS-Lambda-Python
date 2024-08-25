@@ -29,6 +29,9 @@ Example project to deploy a Python deployment package (zip file) to AWS Lambda w
 ### Use a base image from AWS:
 
 - Copy a dockerfile example from the AWS docs for the image
+
+### Test your lambda in the container locally
+
 - build the image `docker build --platform linux/amd64 -t docker-image:test .`
 - run the image `docker run --platform linux/amd64 -p 9000:8080 docker-image:test`
 - in a new terminal test hitting the docker hosted function with: `curl "http://localhost:9000/2015-03-31/functions/function/invocations" -d '{}'`
