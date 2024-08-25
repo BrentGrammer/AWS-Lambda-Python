@@ -1,8 +1,5 @@
 #!/bin/bash
 
-# check for any command errors and log the line where error occurred in the script
-set -e
-trap 'echo "error at line $LINENO"' ERR
 
 RED=31
 GREEN=32
@@ -13,6 +10,10 @@ coloredEcho() {
     shift
     echo -e "\e[${color}m$@\e[0m"
 }
+
+# check for any command errors and log the line where error occurred in the script
+set -e
+trap 'coloredEcho $RED "ERROR: script failed at line $LINENO"' ERR
 
 # Load environment variables/AWS Secrets from .env file
 if [ -f .env ]; then
