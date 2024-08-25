@@ -1,5 +1,9 @@
 #!/bin/bash
 
+# check for any command errors and log the line where error occurred in the script
+set -e
+trap 'echo "error at line $LINENO"' ERR
+
 RED=31
 GREEN=32
 YELLOW=33
@@ -65,6 +69,7 @@ if aws iam get-role --role-name "$ROLE_NAME" >/dev/null 2>&1; then
     # Update the assume role policy document
     aws iam update-assume-role-policy \
         --role-name "$ROLE_NAME" \
+        --timeout 23 \
         --policy-document file://trust-policy.json
 
     coloredEcho $YELLOW "Updated assume role policy for $ROLE_NAME\n"
@@ -94,14 +99,11 @@ if aws lambda get-function --function-name "$LAMBDA_FUNCTION_NAME" --output text
 
     aws lambda update-function-code \
       --function-name "$LAMBDA_FUNCTION_NAME" \
+      --timeout "$TIMEOUT" \
       --image-uri "$ECR_URI":latest
 
-    if [ $? -eq 0 ]; then
-        coloredEcho $YELLOW "\n SUCCESS: Lambda function updated"
-    else
-        coloredEcho $RED "\nFailed to update Lambda function"
-        exit 1
-    fi
+
+    coloredEcho $YELLOW "\n SUCCESS: Lambda function updated"
 else
     coloredEcho $YELLOW "Creating Lambda Function $LAMBDA_FUNCTION_NAME...\n"
     # NOTE: need to set the timeout higher potentially for cold starts!!
